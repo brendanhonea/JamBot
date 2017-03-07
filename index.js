@@ -8,6 +8,28 @@ const phishYears = [ '1983-1987','1988','1989','1990','1991','1992','1993','1994
 
 var Phishin = {}
 
+Phishin.getShow = function(id) {
+    return new Promise(function(resolve, reject) {
+
+       var options = {
+           host: 'phish.in',
+           path: '/api/v1/shows/' + id
+       } 
+
+       http.get(options, function(res){
+            var showData = [];
+            res.setEncoding('utf8');
+            res.on('data', function(chunk){
+                showData.push(chunk);
+            });
+            res.on('end', function(){
+                var resolveStr = JSON.parse(showData.join(''));
+                resolve(resolveStr.data);
+            });
+       });
+    });
+}
+
 Phishin.getEras = function() {
     return new Promise(function(resolve, reject){
         
@@ -22,7 +44,6 @@ Phishin.getEras = function() {
             res.setEncoding('utf8');
             res.on('data', function(chunk){
                 eras = JSON.parse(chunk);
-                
             });
             res.on('end', function() {
                 resolve(eras.data);
@@ -56,9 +77,11 @@ bot.login(token);
 
 
 bot.on('message', (message) => {
+    
+    var messageWords = message.content.split(" ");
+
     if (message.content == '$eras'){
         Phishin.getEras().then(function(result){
-            console.log(result);
             for (var x in result){
                 message.channel.sendMessage(x + " Contains the years : " + result[x]);
             }
@@ -82,11 +105,40 @@ bot.on('message', (message) => {
             }
             datesStr = dates.join('\n');
             message.channel.sendMessage(datesStr);
-            message.channel.sendMessage('You can view more info for a show by typing $<id>');
+            message.channel.sendMessage('You can view more info for a show by typing $info <id>');
             message.channel.sendMessage('To play a show type $play <id>');
         });
     }
-
+    else if (messageWords[0] === "$info"){
+        Phishin.getShow(messageWords[1]).then(function(result){
+            message.channel.sendMessage(result.date);
+            
+            var set1 = [];
+            var set2 = [];
+            var set3 = [];
+            var encore = [];
+            for (var i in result.tracks){
+                //console.log(result.tracks[i].set.toLowerCase());
+                switch (result.tracks[i].set){
+                    case '1':
+                        set1.push(result.tracks[i]);
+                        break;
+                    case '2':
+                        set2.push(result.tracks[i]);
+                        break;
+                    case '3':
+                        set3.push(result.tracks[i]);
+                        break;
+                    case 'E':
+                        encore.push(result.tracks[i]);
+                        break;
+                }
+            }
+            
+            message.channel.sendMessage('Set 1: /n' + set1[0].title);
+            
+        });
+    }
 });
 
 
