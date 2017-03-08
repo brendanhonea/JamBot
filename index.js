@@ -8,12 +8,12 @@ const phishYears = [ '1983-1987','1988','1989','1990','1991','1992','1993','1994
 
 var Phishin = {}
 
-Phishin.getShow = function(id) {
+Phishin.getShow = function(date) {
     return new Promise(function(resolve, reject) {
 
        var options = {
            host: 'phish.in',
-           path: '/api/v1/shows/' + id
+           path: '/api/v1/shows/' + date
        } 
 
        http.get(options, function(res){
@@ -75,46 +75,69 @@ Phishin.getYear = function(year) {
 
 bot.login(token);
 
-
 bot.on('message', function(message) {
     
     var messageWords = message.content.split(" ");
+
+    //Initialize in voice channel
+    /*if(messageWords[0] === '$init'){
+        channel = bot.channels.find('name', messageWords[1]);
+
+        channel.join().then(function(connection){
+            console.log('Connected');
+        }).catch(rejectHandler);
+    }*/
 
     //Showing years in all eras
     if (message.content == '$eras'){
         Phishin.getEras().then(function(result){
             for (var x in result){
-                message.channel.sendMessage(x + " Contains the years : " + result[x]);
+                message.channel.sendMessage(x + " Contains the years : " + result[x]).catch(rejectHandler);
             }
-            message.channel.sendMessage("Which era would you like to listen to?");
+            message.channel.sendMessage("Which era would you like to listen to?").catch(rejectHandler);
         });
     }
+
 
     //Showing years in an era
     else if (message.content == '$1.0' || message.content == '$2.0' || message.content == '$3.0'){
         Phishin.getEras().then(function(result){
             eras = message.content;
-            message.channel.sendMessage('Which year from ' + eras.substr(1) + ' would you like to listen to?');
-            message.channel.sendMessage(result[eras.substr(1)]);
+            message.channel.sendMessage('Which year from ' + eras.substr(1) + ' would you like to listen to?').catch(rejectHandler);
+            message.channel.sendMessage(result[eras.substr(1)]).catch(rejectHandler);
         });
     }
+
 
     //Showing shows in a year
     else if (phishYears.indexOf((year = message.content.substr(1))) >= 0 ){
         Phishin.getYear(year).then(function(result){
-            message.channel.sendMessage('The following shows were played in ' + year + ':');
-            message.channel.sendMessage('');
-            dates = [];
+            message.channel.sendMessage('The following shows were played in ' + year + ':').catch(rejectHandler);
+            var dates = [];
+            var venues = [];
+            var showStr = '';
+
             for (var x in result){
-                dates.push(result[x].date + '    id: ' + result[x].id);
-                //console.log(result[x].venue_name);
+                dates.push(result[x].date);
+                venues.push(result[x].venue_name);
+                var nextShow = dates[x] + ' ' + venues[x] + '\n';
+                if (showStr.length + nextShow.length > 2000){
+                    tmpStr = showStr;
+                    if (tmpStr.length > 0){
+                        message.channel.sendMessage(tmpStr);
+                    }
+                    
+                    showStr = '';
+                }
+                showStr += nextShow;
             }
-            datesStr = dates.join('\n');
-            message.channel.sendMessage(datesStr);
-            message.channel.sendMessage('You can view the setlist for a show by typing $setlist <id>, or detailed information by typing $info <id>');
-            message.channel.sendMessage('To play a show type $play <id>');
+            
+            
+            if (showStr.length > 0) message.channel.sendMessage(showStr).catch(rejectHandler);
+            message.channel.sendMessage('To view the setlist for a show type $setlist yyyy-mm-dd, for more info type $info yyyy-mm-dd').catch(rejectHandler);
+            message.channel.sendMessage('To play a show type $play yyyy-mm-dd').catch(rejectHandler);
         }).catch(function(reject){
-            pass;
+            console.log(reject);
         });
     }
 
@@ -122,12 +145,11 @@ bot.on('message', function(message) {
     //Showing setlist info for a show
     else if (messageWords[0] === '$setlist'){
         Phishin.getShow(messageWords[1]).then(function(result){
-            message.channel.sendMessage(result.date);
-            
             var set1 = [];
             var set2 = [];
             var set3 = [];
             var encore = [];
+            var set4 = [];
             for (var i in result.tracks){
                 //console.log(result.tracks[i].set.toLowerCase());
                 switch (result.tracks[i].set){
@@ -142,6 +164,9 @@ bot.on('message', function(message) {
                         break;
                     case 'E':
                         encore.push(result.tracks[i]);
+                        break;
+                    case '4':
+                        set4.push(result.tracks[i]);
                         break;
                 }
             }
@@ -158,6 +183,9 @@ bot.on('message', function(message) {
             if (encore.length != 0) {
                 message.channel.sendMessage('Encore: \n' + getSetStr(encore));
             }
+            if (set4.length != 0) {
+                message.channel.sendMessage('Set 4: \n' + getSetStr(set4));
+            }
         });
     }
 
@@ -165,6 +193,13 @@ bot.on('message', function(message) {
     //Detailed show info
     else if (messageWords[0] === '$info') {
         
+    }
+
+    else if (messageWords[0] === '$play'){
+        Phishin.getShow(messageWords[1]).then(function(result){
+            
+        }).catch(rejectHandler);
+
     }
 });
 
@@ -176,6 +211,6 @@ getSetStr = function(set) {
     return setStr;
 }
 
-process.on('unhandledRejection', (reason) => {
-    console.log('reason: ' + reason);
-})
+rejectHandler = function(reject){
+    console.log(reject);
+}
