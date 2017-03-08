@@ -76,10 +76,11 @@ Phishin.getYear = function(year) {
 bot.login(token);
 
 
-bot.on('message', (message) => {
+bot.on('message', function(message) {
     
     var messageWords = message.content.split(" ");
 
+    //Showing years in all eras
     if (message.content == '$eras'){
         Phishin.getEras().then(function(result){
             for (var x in result){
@@ -88,6 +89,8 @@ bot.on('message', (message) => {
             message.channel.sendMessage("Which era would you like to listen to?");
         });
     }
+
+    //Showing years in an era
     else if (message.content == '$1.0' || message.content == '$2.0' || message.content == '$3.0'){
         Phishin.getEras().then(function(result){
             eras = message.content;
@@ -95,6 +98,8 @@ bot.on('message', (message) => {
             message.channel.sendMessage(result[eras.substr(1)]);
         });
     }
+
+    //Showing shows in a year
     else if (phishYears.indexOf((year = message.content.substr(1))) >= 0 ){
         Phishin.getYear(year).then(function(result){
             message.channel.sendMessage('The following shows were played in ' + year + ':');
@@ -102,14 +107,20 @@ bot.on('message', (message) => {
             dates = [];
             for (var x in result){
                 dates.push(result[x].date + '    id: ' + result[x].id);
+                //console.log(result[x].venue_name);
             }
             datesStr = dates.join('\n');
             message.channel.sendMessage(datesStr);
-            message.channel.sendMessage('You can view more info for a show by typing $info <id>');
+            message.channel.sendMessage('You can view the setlist for a show by typing $setlist <id>, or detailed information by typing $info <id>');
             message.channel.sendMessage('To play a show type $play <id>');
+        }).catch(function(reject){
+            pass;
         });
     }
-    else if (messageWords[0] === "$info"){
+
+
+    //Showing setlist info for a show
+    else if (messageWords[0] === '$setlist'){
         Phishin.getShow(messageWords[1]).then(function(result){
             message.channel.sendMessage(result.date);
             
@@ -134,12 +145,37 @@ bot.on('message', (message) => {
                         break;
                 }
             }
-            
-            message.channel.sendMessage('Set 1: /n' + set1[0].title);
-            
+                  
+            if (set1.length != 0){
+                message.channel.sendMessage('Set 1: \n' + getSetStr(set1));
+            }
+            if (set2.length != 0) {
+                message.channel.sendMessage('Set 2: \n' + getSetStr(set2));
+            }
+            if (set3.length != 0) {
+                message.channel.sendMessage('Set 3: \n' + getSetStr(set3));
+            }
+            if (encore.length != 0) {
+                message.channel.sendMessage('Encore: \n' + getSetStr(encore));
+            }
         });
+    }
+
+
+    //Detailed show info
+    else if (messageWords[0] === '$info') {
+        
     }
 });
 
+getSetStr = function(set) {
+    var setStr = '';
+    for (var i in set){
+        setStr += set[i].title + '\n';
+    }
+    return setStr;
+}
 
-
+process.on('unhandledRejection', (reason) => {
+    console.log('reason: ' + reason);
+})

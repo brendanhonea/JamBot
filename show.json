@@ -1,0 +1,275 @@
+{
+  "success": true,
+  "total_entries": 1,
+  "total_pages": 1,
+  "page": 1,
+  "data": {
+    "id": 526,
+    "date": "2003-02-28",
+    "duration": 10307135,
+    "incomplete": false,
+    "missing": false,
+    "sbd": false,
+    "remastered": false,
+    "tags": [
+      "Jamcharts"
+    ],
+    "tour_id": 53,
+    "venue": {
+      "id": 462,
+      "name": "Nassau Coliseum",
+      "past_names": null,
+      "latitude": 40.723073,
+      "longitude": -73.5906976,
+      "shows_count": 6,
+      "location": "Uniondale, NY",
+      "slug": "nassau-coliseum",
+      "updated_at": "2013-03-23T02:14:47Z"
+    },
+    "taper_notes": "Phish \r\nFebruary 28th 2003\r\nNassau Coliseum - Uniondale, NY\r\n\r\n\r\nSource: AKG 480/ck61 (90 degree XY) > DMIC-20 > D8@48kHz\r\n\tJustin Trinkes (stoner_fee@taping.org)\r\n\r\nConversion: D8 > Waveterminal 2496 > SF 4.5 > CDWav 1.52 > mkw .97> flac v1.1.0\r\n\r\nEnditing: Sound Forge used for fade in/out and\r\n\t to resample 48 > 44.1kHz (4of4 w/ anti-alias)\r\n\t \r\n\r\n\r\nDisc 1\r\nSet 1:\r\n01. Birds of a Feather\r\n02. Destiny Unbound*\r\n03. Horn >\r\n04. Bathtub Gin\r\n05. Sleep\r\n06. Back on the Train\r\n07. Bouncing Around the Room\r\n08. Walls of the Cave\r\n\r\n\r\nDisc 2\r\nSet 2:\r\n01. Tweezer >\r\n02. Soul Shakedown Party > **\r\n03. David Bowie\r\n04. Round Room >\r\n05. Harry Hood\r\n\r\nDisc 3\r\nencore:\r\n01. ovation\r\n02. Contact\r\n03. Mexican Cousin\r\n04. Tweezer Reprise\r\n\r\n\r\n\r\nComment: \r\n*not played in 788 shows since 11/15/91\r\n**Last played 2/20/97, only third time ever",
+    "likes_count": 42,
+    "tracks": [
+      {
+        "id": 10953,
+        "title": "Birds of a Feather",
+        "position": 1,
+        "duration": 559543,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 1,
+        "slug": "birds-of-a-feather",
+        "mp3": "http://phish.in/audio/000/010/953/10953.mp3",
+        "song_ids": [
+          85
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10954,
+        "title": "Destiny Unbound",
+        "position": 2,
+        "duration": 440947,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 12,
+        "slug": "destiny-unbound",
+        "mp3": "http://phish.in/audio/000/010/954/10954.mp3",
+        "song_ids": [
+          198
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10955,
+        "title": "Horn",
+        "position": 3,
+        "duration": 220918,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 0,
+        "slug": "horn",
+        "mp3": "http://phish.in/audio/000/010/955/10955.mp3",
+        "song_ids": [
+          354
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10956,
+        "title": "Bathtub Gin",
+        "position": 4,
+        "duration": 1301577,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 20,
+        "slug": "bathtub-gin",
+        "mp3": "http://phish.in/audio/000/010/956/10956.mp3",
+        "song_ids": [
+          67
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10957,
+        "title": "Sleep",
+        "position": 5,
+        "duration": 138971,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 0,
+        "slug": "sleep",
+        "mp3": "http://phish.in/audio/000/010/957/10957.mp3",
+        "song_ids": [
+          694
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10958,
+        "title": "Back on the Train",
+        "position": 6,
+        "duration": 749140,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 21,
+        "slug": "back-on-the-train",
+        "mp3": "http://phish.in/audio/000/010/958/10958.mp3",
+        "song_ids": [
+          61
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10959,
+        "title": "Bouncing Around the Room",
+        "position": 7,
+        "duration": 254093,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 2,
+        "slug": "bouncing-around-the-room",
+        "mp3": "http://phish.in/audio/000/010/959/10959.mp3",
+        "song_ids": [
+          111
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10960,
+        "title": "Walls of the Cave",
+        "position": 8,
+        "duration": 930038,
+        "set": "1",
+        "set_name": "Set 1",
+        "likes_count": 8,
+        "slug": "walls-of-the-cave",
+        "mp3": "http://phish.in/audio/000/010/960/10960.mp3",
+        "song_ids": [
+          827
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10961,
+        "title": "Tweezer",
+        "position": 9,
+        "duration": 1661753,
+        "set": "2",
+        "set_name": "Set 2",
+        "likes_count": 51,
+        "slug": "tweezer",
+        "mp3": "http://phish.in/audio/000/010/961/10961.mp3",
+        "song_ids": [
+          803
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10962,
+        "title": "Soul Shakedown Party",
+        "position": 10,
+        "duration": 496953,
+        "set": "2",
+        "set_name": "Set 2",
+        "likes_count": 12,
+        "slug": "soul-shakedown-party",
+        "mp3": "http://phish.in/audio/000/010/962/10962.mp3",
+        "song_ids": [
+          708
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10963,
+        "title": "David Bowie",
+        "position": 11,
+        "duration": 1166289,
+        "set": "2",
+        "set_name": "Set 2",
+        "likes_count": 7,
+        "slug": "david-bowie",
+        "mp3": "http://phish.in/audio/000/010/963/10963.mp3",
+        "song_ids": [
+          189
+        ],
+        "updated_at": "2013-03-30T04:52:42Z"
+      },
+      {
+        "id": 10964,
+        "title": "Round Room",
+        "position": 12,
+        "duration": 413832,
+        "set": "2",
+        "set_name": "Set 2",
+        "likes_count": 0,
+        "slug": "round-room",
+        "mp3": "http://phish.in/audio/000/010/964/10964.mp3",
+        "song_ids": [
+          649
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10965,
+        "title": "Harry Hood",
+        "position": 13,
+        "duration": 893388,
+        "set": "2",
+        "set_name": "Set 2",
+        "likes_count": 9,
+        "slug": "harry-hood",
+        "mp3": "http://phish.in/audio/000/010/965/10965.mp3",
+        "song_ids": [
+          330
+        ],
+        "updated_at": "2013-03-30T04:52:43Z"
+      },
+      {
+        "id": 10966,
+        "title": "Contact",
+        "position": 14,
+        "duration": 445544,
+        "set": "E",
+        "set_name": "Encore",
+        "likes_count": 1,
+        "slug": "contact",
+        "mp3": "http://phish.in/audio/000/010/966/10966.mp3",
+        "song_ids": [
+          168
+        ],
+        "updated_at": "2013-03-30T04:52:43Z"
+      },
+      {
+        "id": 10967,
+        "title": "Mexican Cousin",
+        "position": 15,
+        "duration": 303935,
+        "set": "E",
+        "set_name": "Encore",
+        "likes_count": 0,
+        "slug": "mexican-cousin",
+        "mp3": "http://phish.in/audio/000/010/967/10967.mp3",
+        "song_ids": [
+          499
+        ],
+        "updated_at": "2013-03-30T04:16:02Z"
+      },
+      {
+        "id": 10968,
+        "title": "Tweezer Reprise",
+        "position": 16,
+        "duration": 330214,
+        "set": "E",
+        "set_name": "Encore",
+        "likes_count": 1,
+        "slug": "tweezer-reprise",
+        "mp3": "http://phish.in/audio/000/010/968/10968.mp3",
+        "song_ids": [
+          804
+        ],
+        "updated_at": "2013-03-30T04:52:43Z"
+      }
+    ],
+    "updated_at": "2014-08-02T01:51:56Z"
+  }
+}
