@@ -75,6 +75,7 @@ Phishin.getYear = function(year) {
     });
 }
 
+//Function to do async while loops
 const promiseWhile = (data, condition, action) => {
     var whilst = (data) => {
   	    console.log(data);
@@ -204,6 +205,7 @@ bot.on('message', function(message) {
         
     }
 
+    //Play through a show
     else if (messageWords[0] === '$play'){
         Phishin.getShow(messageWords[1]).then(function(result){
             channel = bot.channels.find('name', 'JamBot');
@@ -221,9 +223,9 @@ bot.on('message', function(message) {
                                 resolve(tracknum + 1);
                             });
                         });
-                        
                     })
                 }
+                //loop through all tracks
                 promiseWhile(0, i => i < result.tracks.length, playSong);
             });
         }).catch(rejectHandler);
