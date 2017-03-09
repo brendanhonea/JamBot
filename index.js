@@ -6,6 +6,8 @@ const token = 'Mjg3MDE2OTA1Nzg3NzAzMjk4.C5pJJA.JUph7Mqcm3Lndc0anNFnbIDWbr4';
 
 const phishYears = [ '1983-1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000', '2002', '2003', '2004', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016','2017' ]
 
+var inChannel = false;
+
 var Phishin = {}
 
 Phishin.getShow = function(date) {
@@ -73,6 +75,17 @@ Phishin.getYear = function(year) {
     });
 }
 
+const promiseWhile = (data, condition, action) => {
+    var whilst = (data) => {
+  	    console.log(data);
+        return condition(data) ?
+            action(data).then(whilst) :
+            Promise.resolve(data);
+  }
+  return whilst(data);
+};
+
+
 bot.login(token);
 
 bot.on('message', function(message) {
@@ -80,13 +93,9 @@ bot.on('message', function(message) {
     var messageWords = message.content.split(" ");
 
     //Initialize in voice channel
-    /*if(messageWords[0] === '$init'){
+    if(messageWords[0] === '$join'){
         channel = bot.channels.find('name', messageWords[1]);
-
-        channel.join().then(function(connection){
-            console.log('Connected');
-        }).catch(rejectHandler);
-    }*/
+    }
 
     //Showing years in all eras
     if (message.content == '$eras'){
@@ -197,7 +206,26 @@ bot.on('message', function(message) {
 
     else if (messageWords[0] === '$play'){
         Phishin.getShow(messageWords[1]).then(function(result){
-            
+            channel = bot.channels.find('name', 'JamBot');
+
+            channel.join(channel).then(function(connection){
+                const playSong = function(tracknum) {
+                    return new Promise(function(resolve, reject) {
+                        const request = require('http');
+                        const stream = result.tracks[tracknum].mp3;
+                        request.get(stream, function(res){
+                            const streamDispatcher = connection.playStream(res);
+                            
+                            streamDispatcher.on('end', function(){
+                                console.log('track ' + tracknum + ' over');
+                                resolve(tracknum + 1);
+                            });
+                        });
+                        
+                    })
+                }
+                promiseWhile(0, i => i < result.tracks.length, playSong);
+            });
         }).catch(rejectHandler);
 
     }
