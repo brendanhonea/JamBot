@@ -76,14 +76,18 @@ Phishin.getYear = function(year) {
 }
 
 //Function to do async while loops
-const promiseWhile = (data, condition, action) => {
+const promiseWhilePlayer = (data, condition, action) => {
     var whilst = (data) => {
   	    console.log(data);
-        return condition(data) ?
-            action(data).then(whilst) :
+        if (condition(data)){
+            return action(data).then(whilst);
+        }
+        else {
             Promise.resolve(data);
-  }
-  return whilst(data);
+        }
+
+    }
+    return whilst(data);
 };
 
 
@@ -225,8 +229,9 @@ bot.on('message', function(message) {
                         });
                     })
                 }
+                
                 //loop through all tracks
-                promiseWhile(0, i => i < result.tracks.length, playSong);
+                promiseWhilePlayer(0, i => i < result.tracks.length, playSong);
             });
         }).catch(rejectHandler);
 
