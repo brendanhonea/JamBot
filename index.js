@@ -182,6 +182,9 @@ bot.on('message', function(message) {
                                         resolve(playerMessage[1]);
                                     }
                                 }
+                                if (playerMessage[0] == '$stop'){
+                                    streamDispatcher.end('stopped');
+                                }
                             });
                             
 
@@ -189,6 +192,9 @@ bot.on('message', function(message) {
                                 if (reason != 'user'){ //If the track ends naturally
                                     console.log('track ' + tracknum + ' over');
                                     resolve(tracknum + 1);
+                                }
+                                if (reason == 'stopped'){
+                                    resolve(-1);
                                 }
                             });
                         });
