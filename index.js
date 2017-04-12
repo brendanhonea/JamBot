@@ -1,79 +1,10 @@
 const Discord = require('discord.js');
-const http = require('http');
+const Phishin = require('./phish.js');
 
 const bot = new Discord.Client();
 const token = 'Mjg3MDE2OTA1Nzg3NzAzMjk4.C5pJJA.JUph7Mqcm3Lndc0anNFnbIDWbr4';
 
-const phishYears = [ '1983-1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000', '2002', '2003', '2004', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016','2017' ]
-
 var inChannel = false;
-
-var Phishin = {}
-
-Phishin.getShow = function(date) {
-    return new Promise(function(resolve, reject) {
-
-       var options = {
-           host: 'phish.in',
-           path: '/api/v1/shows/' + date
-       } 
-
-       http.get(options, function(res){
-            var showData = [];
-            res.setEncoding('utf8');
-            res.on('data', function(chunk){
-                showData.push(chunk);
-            });
-            res.on('end', function(){
-                var resolveStr = JSON.parse(showData.join(''));
-                resolve(resolveStr.data);
-            });
-       });
-    });
-}
-
-Phishin.getEras = function() {
-    return new Promise(function(resolve, reject){
-        
-
-        var options = {
-            host: 'phish.in',
-            path: '/api/v1/eras'
-        }
-
-        http.get(options, function(res) {
-            var eras;
-            res.setEncoding('utf8');
-            res.on('data', function(chunk){
-                eras = JSON.parse(chunk);
-            });
-            res.on('end', function() {
-                resolve(eras.data);
-            });
-        });
-    })
-}
-
-Phishin.getYear = function(year) {
-    return new Promise(function(resolve, reject){
-        var options = {
-            host: 'phish.in',
-            path: '/api/v1/years/' + year
-        }
-
-        http.get(options, function(res) {
-            var shows = [];
-            res.setEncoding('utf8');
-            res.on('data', function(chunk){
-                shows.push(chunk);
-            });
-            res.on('end', function() {
-                var result = JSON.parse(shows.join(''));
-                resolve(result.data);
-            });
-        });
-    });
-}
 
 //Function to do async while loops
 const promiseWhilePlayer = (data, condition, action) => {
@@ -124,7 +55,7 @@ bot.on('message', function(message) {
 
 
     //Showing shows in a year
-    else if (phishYears.indexOf((year = message.content.substr(1))) >= 0 ){
+    else if (Phishin.phishYears.indexOf((year = message.content.substr(1))) >= 0 ){
         Phishin.getYear(year).then(function(result){
             message.channel.sendMessage('The following shows were played in ' + year + ':').catch(rejectHandler);
             var dates = [];
@@ -184,21 +115,32 @@ bot.on('message', function(message) {
                         break;
                 }
             }
-                  
+            
+            var trackCount = 0;
             if (set1.length != 0){
-                message.channel.sendMessage('Set 1: \n' + getSetStr(set1));
+                var setObj = getSetStr(set1, trackCount);
+                trackCount += setObj.count;
+                message.channel.sendMessage('Set 1: \n' + setObj.setStr);
             }
             if (set2.length != 0) {
-                message.channel.sendMessage('Set 2: \n' + getSetStr(set2));
+                var setObj = getSetStr(set2, trackCount);
+                trackCount += setObj.count;
+                message.channel.sendMessage('Set 2: \n' + setObj.setStr);
             }
             if (set3.length != 0) {
-                message.channel.sendMessage('Set 3: \n' + getSetStr(set3));
+                var setObj = getSetStr(set3, trackCount);
+                trackCount += setObj.count;
+                message.channel.sendMessage('Set 3: \n' + setObj.setStr);
             }
             if (encore.length != 0) {
-                message.channel.sendMessage('Encore: \n' + getSetStr(encore));
+                var setObj = getSetStr(encore, trackCount);
+                trackCount += setObj.count;
+                message.channel.sendMessage('Encore: \n' + setObj.setStr);
             }
             if (set4.length != 0) {
-                message.channel.sendMessage('Set 4: \n' + getSetStr(set4));
+                var setObj = getSetStr(set4, trackCount);
+                trackCount += setObj.count;
+                message.channel.sendMessage('Set 4: \n' + setObj.setStr);
             }
         });
     }
@@ -221,29 +163,54 @@ bot.on('message', function(message) {
                         const stream = result.tracks[tracknum].mp3;
                         request.get(stream, function(res){
                             const streamDispatcher = connection.playStream(res);
+                            bot.on('message', (message) => {
+                                var playerMessage = message.content.split(" ");
+
+                                if (playerMessage[0] == '$skip'){
+                                    streamDispatcher.end();
+                                    resolve(tracknum + 1); //go to next track
+                                }
+                                if (playerMessage[0] == '$back'){
+                                    streamDispatcher.end();
+                                    resolve(tracknum - 1);
+                                }
+                                if (playerMessage[0] == '$track'){
+                                    if (playerMessage[1] !== null 
+                                    && playerMessage[1] < result.tracks.length 
+                                    && playerMessage[1] > -1){
+                                        streamDispatcher.end();
+                                        resolve(playerMessage[1]);
+                                    }
+                                }
+                            });
                             
-                            streamDispatcher.on('end', function(){
-                                console.log('track ' + tracknum + ' over');
-                                resolve(tracknum + 1);
+
+                            streamDispatcher.on('end', function(reason){
+                                if (reason != 'user'){ //If the track ends naturally
+                                    console.log('track ' + tracknum + ' over');
+                                    resolve(tracknum + 1);
+                                }
                             });
                         });
                     })
                 }
                 
                 //loop through all tracks
-                promiseWhilePlayer(0, i => i < result.tracks.length, playSong);
+                promiseWhilePlayer(0, i => (i < result.tracks.length && i > -1), playSong);
             });
         }).catch(rejectHandler);
 
     }
 });
 
-getSetStr = function(set) {
+getSetStr = function(set, tracks) {
     var setStr = '';
+    var count = 0;
     for (var i in set){
-        setStr += set[i].title + '\n';
+        setStr += (parseInt(i, 10) + parseInt(tracks, 10)) + ' -- ' + set[i].title + '\n';
+        count++;
     }
-    return setStr;
+    return {'setStr': setStr, 'count': count};
 }
 
 rejectHandler = function(reject){
