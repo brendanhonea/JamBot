@@ -4,24 +4,6 @@ const Phishin = require('./phish.js');
 const bot = new Discord.Client();
 const token = 'Mjg3MDE2OTA1Nzg3NzAzMjk4.C5pJJA.JUph7Mqcm3Lndc0anNFnbIDWbr4';
 
-var inChannel = false;
-
-//Function to do async while loops
-const promiseWhilePlayer = (data, condition, action) => {
-    var whilst = (data) => {
-  	    console.log(data);
-        if (condition(data)){
-            return action(data).then(whilst);
-        }
-        else {
-            Promise.resolve(data);
-        }
-
-    }
-    return whilst(data);
-};
-
-
 bot.login(token);
 
 bot.on('message', function(message) {
@@ -201,8 +183,8 @@ bot.on('message', function(message) {
                     })
                 }
                 
-                //loop through all tracks
-                promiseWhilePlayer(0, i => (i < result.tracks.length && i > -1), playSong);
+                //Start the player
+                Player(0, i => (i < result.tracks.length && i > -1), playSong);
             });
         }).catch(rejectHandler);
 
@@ -222,3 +204,18 @@ getSetStr = function(set, tracks) {
 rejectHandler = function(reject){
     console.log(reject);
 }
+
+//Function to do async while loops (play through the playlist)
+const Player = (data, condition, action) => {
+    var whilst = (data) => {
+  	    console.log(data);
+        if (condition(data)){
+            return action(data).then(whilst);
+        }
+        else {
+            Promise.resolve(data);
+        }
+
+    }
+    return whilst(data);
+};
